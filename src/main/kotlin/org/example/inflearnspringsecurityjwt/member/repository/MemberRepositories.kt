@@ -1,8 +1,9 @@
-
 package org.example.inflearnspringsecurityjwt.member.repository
 
-import org.example.inflearnspringsecurityjwt.member.dto.MemberRole
+
+
 import org.example.inflearnspringsecurityjwt.member.entitiy.Member
+import org.example.inflearnspringsecurityjwt.member.entitiy.MemberRole
 import org.springframework.data.jpa.repository.JpaRepository
 
 

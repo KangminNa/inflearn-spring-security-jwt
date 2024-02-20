@@ -1,7 +1,9 @@
 package org.example.inflearnspringsecurityjwt.member.controller
 
 import jakarta.validation.Valid
+import org.example.inflearnspringsecurityjwt.common.authority.TokenInfo
 import org.example.inflearnspringsecurityjwt.common.dto.BaseResponse
+import org.example.inflearnspringsecurityjwt.member.dto.LoginDto
 import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoRequest
 import org.example.inflearnspringsecurityjwt.member.service.MemberService
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,6 +23,14 @@ class MemberController(
     fun signUp(@RequestBody @Valid memberDtoRequest: MemberDtoRequest): BaseResponse<Unit> {
         val resultMsg: String = memberService.signUp(memberDtoRequest)
         return BaseResponse(message = resultMsg)
+    }
+    /**
+     * 로그인
+     */
+    @PostMapping("/login")
+    fun login(@RequestBody @Valid loginDto: LoginDto): BaseResponse<TokenInfo> {
+        val tokenInfo = memberService.login(loginDto)
+        return BaseResponse(data = tokenInfo)
     }
 
 }
