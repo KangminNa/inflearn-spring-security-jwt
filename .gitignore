@@ -249,3 +249,4 @@ Temporary Items
 
 # server settings
 /src/main/resources/application.yml
+*.lock
