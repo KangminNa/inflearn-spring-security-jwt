@@ -3,6 +3,7 @@ package org.example.inflearnspringsecurityjwt.member.entitiy
 import jakarta.persistence.*
 import org.example.inflearnspringsecurityjwt.common.status.Gender
 import org.example.inflearnspringsecurityjwt.common.status.ROLE
+import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -37,6 +38,9 @@ class Member(
 ) {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     val memberRole: List<MemberRole>? = null
+
+    fun toDto(): MemberDtoResponse =
+        MemberDtoResponse(id!!, loginId, name, birthDate.formatDate(), gender.desc, email)
 
     private fun LocalDate.formatDate(): String =
         this.format(DateTimeFormatter.ofPattern("yyyyMMdd"))

@@ -5,11 +5,9 @@ import org.example.inflearnspringsecurityjwt.common.authority.TokenInfo
 import org.example.inflearnspringsecurityjwt.common.dto.BaseResponse
 import org.example.inflearnspringsecurityjwt.member.dto.LoginDto
 import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoRequest
+import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoResponse
 import org.example.inflearnspringsecurityjwt.member.service.MemberService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/member")
 @RestController
@@ -31,6 +29,15 @@ class MemberController(
     fun login(@RequestBody @Valid loginDto: LoginDto): BaseResponse<TokenInfo> {
         val tokenInfo = memberService.login(loginDto)
         return BaseResponse(data = tokenInfo)
+    }
+
+    /*
+    * 내 정보 보기
+    * */
+    @GetMapping("/info/{id}")
+    fun searchMyInfo(@PathVariable id: Long): BaseResponse<MemberDtoResponse> {
+        val response = memberService.searchMyInfo(id)
+        return BaseResponse(data = response)
     }
 
 }

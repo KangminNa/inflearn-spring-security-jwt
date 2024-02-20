@@ -7,10 +7,12 @@ import org.example.inflearnspringsecurityjwt.common.exception.InvalidInputExcept
 import org.example.inflearnspringsecurityjwt.common.status.ROLE
 import org.example.inflearnspringsecurityjwt.member.dto.LoginDto
 import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoRequest
+import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoResponse
 import org.example.inflearnspringsecurityjwt.member.entitiy.Member
 import org.example.inflearnspringsecurityjwt.member.entitiy.MemberRole
 import org.example.inflearnspringsecurityjwt.member.repository.MemberRepository
 import org.example.inflearnspringsecurityjwt.member.repository.MemberRoleRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.stereotype.Service
@@ -51,6 +53,13 @@ class MemberService(
         val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
 
         return jwtTokenProvider.createToken(authentication)
+    }
+    /**
+     * 내 정보 조회
+     */
+    fun searchMyInfo(id: Long): MemberDtoResponse {
+        val member: Member = memberRepository.findByIdOrNull(id) ?: throw InvalidInputException("id", "회원번호(${id})가 존재하지 않는 유저입니다.")
+        return member.toDto()
     }
 
 
