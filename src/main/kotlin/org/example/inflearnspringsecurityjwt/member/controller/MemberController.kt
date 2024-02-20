@@ -1,5 +1,6 @@
 package org.example.inflearnspringsecurityjwt.member.controller
 
+import jakarta.validation.Valid
 import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoRequest
 import org.example.inflearnspringsecurityjwt.member.service.MemberService
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,8 +17,9 @@ class MemberController(
      * 회원가입
      */
     @PostMapping("/signup")
-    fun signUp(@RequestBody memberDtoRequest: MemberDtoRequest): String {
+    fun signUp(@RequestBody @Valid memberDtoRequest: MemberDtoRequest): String {
         return memberService.signUp(memberDtoRequest)
     }
 
 }
+
