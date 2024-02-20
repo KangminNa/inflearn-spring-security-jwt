@@ -1,6 +1,7 @@
 package org.example.inflearnspringsecurityjwt.member.service
 
 import jakarta.transaction.Transactional
+import org.example.inflearnspringsecurityjwt.common.exception.InvalidInputException
 import org.example.inflearnspringsecurityjwt.member.dto.MemberDtoRequest
 import org.example.inflearnspringsecurityjwt.member.entitiy.Member
 import org.example.inflearnspringsecurityjwt.member.repository.MemberRepository
@@ -19,18 +20,10 @@ class MemberService(
         // ID 중복 검사
         var member: Member? = memberRepository.findByLoginId(memberDtoRequest.loginId)
         if (member != null) {
-            return "이미 등록된 ID 입니다."
+            throw InvalidInputException("loginId", "이미 등록된 ID 입니다.")
         }
 
-        member = Member(
-            id = null,
-            memberDtoRequest.loginId,
-            memberDtoRequest.password,
-            memberDtoRequest.name,
-            memberDtoRequest.birthDate,
-            memberDtoRequest.gender,
-            memberDtoRequest.email,
-        )
+        member = memberDtoRequest.toEntity()
 
         memberRepository.save(member)
 
