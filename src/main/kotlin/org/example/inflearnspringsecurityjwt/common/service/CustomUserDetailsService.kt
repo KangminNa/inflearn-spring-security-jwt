@@ -1,9 +1,9 @@
 package org.example.inflearnspringsecurityjwt.common.service
 
+import org.example.inflearnspringsecurityjwt.common.dto.CustomUser
 import org.example.inflearnspringsecurityjwt.member.entitiy.Member
 import org.example.inflearnspringsecurityjwt.member.repository.MemberRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -22,7 +22,8 @@ class CustomUserDetailsService(
 
 
     private fun createUserDetails(member: Member): UserDetails =
-        User(
+        CustomUser(
+            member.id!!,
             member.loginId,
             passwordEncoder.encode(member.password),
             member.memberRole!!.map { SimpleGrantedAuthority("ROLE_${it.role}") }

@@ -4,16 +4,15 @@ package org.example.inflearnspringsecurityjwt.common.authority
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.example.inflearnspringsecurityjwt.common.dto.CustomUser
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.RuntimeException
 
 const val EXPIRATION_MILLISECONDS: Long = 1000 * 60 * 30
 
@@ -40,6 +39,7 @@ class JwtTokenProvider {
             .builder()
             .setSubject(authentication.name)
             .claim("auth", authorities)
+            .claim("userId", (authentication.principal as CustomUser).userId)
             .setIssuedAt(now)
             .setExpiration(accessExpiration)
             .signWith(key, SignatureAlgorithm.HS256)
@@ -55,13 +55,14 @@ class JwtTokenProvider {
         val claims: Claims = getClaims(token)
 
         val auth = claims["auth"] ?: throw RuntimeException("잘못된 토큰입니다.")
+        val userId = claims["userId"] ?: throw RuntimeException("잘못된 토큰입니다.")
 
         // 권한 정보 추출
         val authorities: Collection<GrantedAuthority> = (auth as String)
             .split(",")
             .map { SimpleGrantedAuthority(it) }
 
-        val principal: UserDetails = User(claims.subject, "", authorities)
+        val principal: UserDetails = CustomUser(userId.toString().toLong(), claims.subject, "", authorities)
 
         return UsernamePasswordAuthenticationToken(principal, "", authorities)
     }
