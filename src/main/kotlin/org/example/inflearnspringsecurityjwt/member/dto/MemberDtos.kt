@@ -1,11 +1,13 @@
 package org.example.inflearnspringsecurityjwt.member.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import jakarta.persistence.*
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import org.example.inflearnspringsecurityjwt.common.annotation.ValidEnum
 import org.example.inflearnspringsecurityjwt.common.status.Gender
+import org.example.inflearnspringsecurityjwt.common.status.ROLE
 import org.example.inflearnspringsecurityjwt.member.entitiy.Member
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -67,3 +69,19 @@ data class MemberDtoRequest(
     fun toEntity() : Member =
         Member(id, loginId, password, name, birthDate, gender, email)
 }
+
+@Entity
+class MemberRole(
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long? = null,
+
+    @Column(nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
+    val role: ROLE,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = ForeignKey(name = "fk_member_role_member_id"))
+    val member: Member,
+
+    )
